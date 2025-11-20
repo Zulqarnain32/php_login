@@ -16,7 +16,7 @@
 <body>
     <div>
         <div class="flex items-center justify-center h-screen">
-            <form action="" method="POST" class="border border-gray-300 rounded-lg shadow-md p-4 w-[300px] mt-14">
+            <form action="logincode.php" method="POST" class="border border-gray-300 rounded-lg shadow-md p-4 w-[300px] mt-14">
                 <h1 class="text-center text-2xl font-semibold mb-3">Login</h1>
                 <h2>Email </h2>
                 <input
@@ -28,7 +28,7 @@
                 <input
                     type="password"
                     placeholder="Password"
-                    name="rollno"
+                    name="password"
                     class="mt-1 mb-3 w-full px-3 py-1 text-[16px] border border-gray-300">
                  <!-- login message  -->
                      <?php
@@ -39,7 +39,7 @@
                      ?>
                 <input 
                     type="submit" 
-                    name="login" 
+                    name="login-btn" 
                     value="Login" 
                     class="text-white bg-blue-500 hover:bg-blue-700 px-3 py-1 cursor-pointer my-5 w-full">
                 <p class="text-center">Don't have an account
