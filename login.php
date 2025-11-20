@@ -1,5 +1,12 @@
 <?php
   session_start();
+
+ if(isset($_SESSION['autheticated'])){
+    $_SESSION['status'] = "already login";
+    header("location: /loginSystem/dashboard.php");
+   exit(0);
+  } 
+
   include('components/navbar.php');
 ?>
 
