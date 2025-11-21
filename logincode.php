@@ -24,11 +24,14 @@
 
                 $_SESSION['status'] = "User Login Successfully";
                 header("location: /loginSystem/dashboard.php");
+                exit(0);
 
 
             } else {
                 $_SESSION['status'] = "Please verify your email first";
                 header("location: /loginSystem/login.php");
+                exit(0);
+
 
             }
 
@@ -36,12 +39,14 @@
         } else {
             $_SESSION['status'] = "invalid email or password";
             header("location: /loginSystem/login.php");
+            exit(0);
         }
 
 
     } else {
         $_SESSION['status'] = "all fields are required";
-        // header("location: /loginSystem/login.php");
+        header("location: /loginSystem/login.php");
+        exit(0);
     }
   
 
