@@ -33,7 +33,7 @@
     } 
 
  } else {
-    $_SESSION['status'] = "not allowdd";
+    $_SESSION['status'] = "not allowed";
     header("location: /loginSystem/login.php");
  }
 

@@ -1,43 +1,57 @@
 <?php
 session_start();
 include('db.php');
+
 if (isset($_POST['update_password_btn'])) {
+
     $email = mysqli_real_escape_string($conn, $_POST['email']);
     $new_password = mysqli_real_escape_string($conn, $_POST['newpassword']);
-    echo $new_password;
-    echo "ty";
+    $token = mysqli_real_escape_string($conn, $_POST['token']);
 
-    $get_user_record = "SELECT * FROM users WHERE email = '$email' LIMIT 1";
-    $get_user_record_run = mysqli_query($conn, $get_user_record);
+    // Check if token exists and not expired
+    $query = "SELECT * FROM users 
+              WHERE email='$email' AND verify_token='$token'
+              LIMIT 1";
+    $query_run = mysqli_query($conn, $query);
 
-    if (mysqli_num_rows($get_user_record_run) > 0) {
-        echo "<br> user record";
-        $row = mysqli_fetch_array($get_user_record_run);
-        $get_user =  $row['username'];
-        $get_user_password =  $row['password'];
-        echo "<br> old password  was $get_user_password";
-        echo "<br> new passwor is $new_password";
+    if (mysqli_num_rows($query_run) > 0) {
 
-        $update_user_password = "UPDATE users SET password = '$new_password' WHERE email = '$email' LIMIT 1";
-        $update_user_password_run = mysqli_query($conn, $update_user_password);
+        $row = mysqli_fetch_array($query_run);
 
-        echo "<br> password has been updated <br>";
-
-        if (mysqli_affected_rows($conn) > 0) {
-            echo "password updated";
-            $_SESSION['status'] = "Password Updated Successfully!";
-            header('location: dashboard.php');
-            exit();
-        } else {
-            echo "password couldn't change";
-            $_SESSION['status'] = "password couldn't be updated try again";
+        // Check expiry
+        if (strtotime($row['reset_token_expire']) < time()) {
+            $_SESSION['status'] = "Your reset link has expired!";
+            header("location: password-reset.php");
             exit();
         }
+
+        // Update password
+        $update_password = "UPDATE users 
+                            SET password='$new_password', 
+                                verify_token=NULL,
+                                reset_token_expire=NULL 
+                            WHERE email='$email' LIMIT 1";
+
+        $update_password_run = mysqli_query($conn, $update_password);
+
+        if ($update_password_run) {
+            $_SESSION['status'] = "Password updated successfully!";
+            header("location: dashboard.php");
+            exit();
+        } else {
+            $_SESSION['status'] = "Error updating password!";
+            header("location: password-change.php?token=$token&email=$email");
+            exit();
+        }
+
     } else {
-        echo "problem";
-        $_SESSION['status'] = "something went wrong in sql query";
+        $_SESSION['status'] = "Invalid or used token!";
+        header("location: password-reset.php");
         exit();
     }
+
 } else {
-    echo "something went wrong with update form";
+    $_SESSION['status'] = "Unauthorized access!";
+    header("location: password-reset.php");
+    exit();
 }

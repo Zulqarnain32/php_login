@@ -36,7 +36,9 @@
                     name="update_password_btn" 
                     value="Update Password" 
                     class="text-white bg-blue-500 hover:bg-blue-700 px-3 py-1 cursor-pointer my-5 w-full">
-              
+              <input type="hidden" name="email" value="<?php echo $_GET['email']; ?>">
+              <input type="hidden" name="token" value="<?php echo $_GET['token']; ?>">
+
             </form>
         </div>
 </body>
